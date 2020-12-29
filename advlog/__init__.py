@@ -44,7 +44,8 @@ class Logger:
         
         sio = StringIO()
         
-        print(f'[{level.name} - {Utils.getDateTime()}]', *args, file=sio)
+        timestamp = datetime.now().strftime(self.timestamp_format)
+        print(f'[{level.name} - {timestamp}]', *args, file=sio)
         sio.seek(0)
         msg = sio.read()
         
