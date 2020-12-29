@@ -6,6 +6,7 @@ from io import StringIO
 from os import path, makedirs
 from sys import stdout, stderr
 from typing import *
+import traceback
 
 class FatalError(Exception):
     """Simple exception raised when logging a fatal error."""
@@ -78,3 +79,18 @@ class Logger:
         """Shortcut for `log(LogLevel.FATAL, *args, file=file).` Also raises a `FatalError(*args)`."""
         self.log(LogLevel.FATAL, *args, file=file)
         raise FatalError(*args)
+    
+    def ex(self, ex: Optional[BaseException] = None, file: Optional[IO] = stderr):
+        """Logs the specified exception as `LogLevel.ERROR`.
+        
+        ## Arguments:
+        - `ex` - Optional. Exception to log. If omitted uses the information from `sys.exc_info()`.
+        - `file` - Optional. IO to also write to. Defaults to `sys.stderr`.
+        """
+        strbuff = StringIO()
+        if ex:
+            traceback.print_exception(type(ex), ex, ex.__traceback__, file=strbuff)
+        else:
+            traceback.print_exception(*sys.exc_info(), file=strbuff)
+        strbuff.seek(0)
+        return self.e(strbuff.read(), file=file)
