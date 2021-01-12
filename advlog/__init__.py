@@ -7,6 +7,7 @@ from os import path, makedirs
 from sys import stdout, stderr
 from typing import *
 import traceback
+import typing
 
 class FatalError(Exception):
     """Simple exception raised when logging a fatal error."""
@@ -32,7 +33,7 @@ class Logger:
         self.timestamp_format = timestamp_format
         makedirs(path.abspath(path.dirname(logfile)))
     
-    def log(self, level: LogLevel, *args, file: Optional[IO] = None):
+    def log(self, level: LogLevel, *args, file: Optional[typing.IO] = None):
         """Log `args` with specified `LogLevel` and - if applicable - formatted timestamp (i.e. "[{level.name} - {timestamp}]").
         
         Internally uses a `StringIO` buffer with `print`.
@@ -56,32 +57,32 @@ class Logger:
             with open(self.filepath, 'a') as fd:
                 fd.write(msg)
     
-    def v(self, *args, file: Optional[IO] = stdout):
+    def v(self, *args, file: Optional[typing.IO] = stdout):
         """Shortcut for `log(LogLevel.VERBOSE, *args, file=file)`."""
         return self.log(LogLevel.VERBOSE, *args, file=file)
     
-    def d(self, *args, file: Optional[IO] = stdout):
+    def d(self, *args, file: Optional[typing.IO] = stdout):
         """Shortcut for `log(LogLevel.DEBUG, *args, file=file)`."""
         return self.log(LogLevel.DEBUG, *args, file=file)
     
-    def i(self, *args, file: Optional[IO] = stdout):
+    def i(self, *args, file: Optional[typing.IO] = stdout):
         """Shortcut for `log(LogLevel.INFO, *args, file=file)`."""
         return self.log(LogLevel.INFO, *args, file=file)
     
-    def w(self, *args, file: Optional[IO] = stdout):
+    def w(self, *args, file: Optional[typing.IO] = stdout):
         """Shortcut for `log(LogLevel.WARNING, *args, file=file)`."""
         return self.log(LogLevel.WARNING, *args, file=file)
     
-    def e(self, *args, file: Optional[IO] = stderr):
+    def e(self, *args, file: Optional[typing.IO] = stderr):
         """Shortcut for `log(LogLevel.ERROR, *args, file=file)`."""
         return self.log(LogLevel.ERROR, *args, file=file)
     
-    def f(self, *args, file: Optional[IO] = stderr):
+    def f(self, *args, file: Optional[typing.IO] = stderr):
         """Shortcut for `log(LogLevel.FATAL, *args, file=file).` Also raises a `FatalError(*args)`."""
         self.log(LogLevel.FATAL, *args, file=file)
         raise FatalError(*args)
     
-    def ex(self, ex: Optional[BaseException] = None, file: Optional[IO] = stderr):
+    def ex(self, ex: Optional[BaseException] = None, file: Optional[typing.IO] = stderr):
         """Logs the specified exception as `LogLevel.ERROR`.
         
         ## Arguments:
