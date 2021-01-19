@@ -31,7 +31,8 @@ class Logger:
     def __init__(self, logfile: Optional[str] = None, timestamp_format: Optional[str] = "%y/%m/%d-%H:%M:%S.%f"):
         self.filepath = logfile
         self.timestamp_format = timestamp_format
-        makedirs(path.abspath(path.dirname(logfile)))
+        if logfile:
+            makedirs(path.abspath(path.dirname(logfile)))
     
     def log(self, level: LogLevel, *args, file: Optional[typing.IO] = None):
         """Log `args` with specified `LogLevel` and - if applicable - formatted timestamp (i.e. "[{level.name} - {timestamp}]").
